@@ -61,16 +61,8 @@ DROP TABLE zamowienia CASCADE;
           ilosc_sztuk INT
           );
 
-          CREATE TABLE klienci
-          (ID_KLIENTA SERIAL PRIMARY KEY,
-          imie TEXT,
-          nazwisko TEXT,
-          id_koszyka INT,
-          saldo INT
-          );
-
           CREATE TABLE adresy
-          (id_klienta SERIAL PRIMARY KEY REFERENCES klienci(id_klienta) ON UPDATE CASCADE ON DELETE CASCADE,
+          (email TEXT PRIMARY KEY,
           miasto TEXT,
           ulica TEXT,
           numer_budynku INT,
@@ -78,15 +70,23 @@ DROP TABLE zamowienia CASCADE;
           kod_pocztowy INT,
           telefon INT
           );
+          
+          CREATE TABLE klienci
+          (email TEXT PRIMARY KEY REFERENCES adresy(email) ON UPDATE CASCADE ON DELETE CASCADE,
+          imie TEXT,
+          nazwisko TEXT,
+          id_koszyka INT,
+          saldo INT
+          );
 
           CREATE TABLE koszyki
           (id_koszyka SERIAL PRIMARY KEY,
           id_gry INT REFERENCES gry(id_gry),
-          id_klienta INT REFERENCES klienci(id_klienta) ON UPDATE CASCADE ON DELETE CASCADE);
+          email TEXT REFERENCES klienci(email) ON UPDATE CASCADE ON DELETE CASCADE);
 
           CREATE TABLE zamowienia
           (id_zamowienia SERIAL PRIMARY KEY,
-          id_klienta INT REFERENCES klienci(id_klienta) ON UPDATE CASCADE ON DELETE CASCADE,
+          email TEXT REFERENCES klienci(email) ON UPDATE CASCADE ON DELETE CASCADE,
           id_platnosci INT REFERENCES platnosci(id_platnosci) ON UPDATE CASCADE ON DELETE CASCADE,
           id_gry INT REFERENCES gry(id_gry),
           data_rozpoczecia DATE);
@@ -94,6 +94,7 @@ DROP TABLE zamowienia CASCADE;
 
     cursor.execute(create_table_query)
     connection.commit()
+
 
 except (Exception, psycopg2.Error) as error:
     print("Error while connecting to PostgreSQL", error)
