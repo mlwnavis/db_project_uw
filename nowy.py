@@ -1,26 +1,67 @@
 import main
 from tkinter import *
+import re
+from tkinter import messagebox
 
 root = Tk()
 root.geometry("400x400")
 
+def check_rejestracja(mail, city, street, number, postal, tel):
+    email ='^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
+    miasto = '^([A-ZŚŹŻŁ]{1}[a-ząćęłńóśźż]{1,})$'
+    ulica = '^([A-ZŚŹŻŁ]{1}[a-ząćęłńóśźż]{2,})$'
+    adres = '^([1-9]{1,2})+[/]?([1-9]{1,2})$'
+    kod = '^[0-9]{2}-[0-9]{3}$'
+    tele = '^[1-9][0-9]{8}$'
+
+    if not re.search(email, mail):
+        return "adres email"
+    elif not re.search(miasto, city):
+        return "miasto"
+    elif not re.search(ulica, street):
+        return "ulicę"
+    elif not re.search(adres, number):
+        return "numer budynku"
+    elif not re.search(kod, postal):
+        return "kod pocztowy"
+    elif not re.search(tele, tel):
+        return "telefon"
+    else:
+        return True
+
 def rejestracja():
-    if n_mieszkania.get().find("/") == -1:
-        numer_budynku = n_mieszkania.get()
-        numer_mieszkania = "NULL"
-    main.cursor.execute("INSERT INTO adresy VALUES ('{}', '{}', '{}', {}, {}, {}, {})"
-                        .format(email.get(), miasto.get(), ulica.get(), numer_budynku, numer_mieszkania, kod.get(),telefon.get()))
-    main.connection.commit()
+    mail = email.get()
+    city = str(miasto.get()).capitalize()
+    street = str(ulica.get()).capitalize()
+    number = n_mieszkania.get()
+    postal = str(kod.get())
+    tel = telefon.get()
+    check = check_rejestracja(mail, city, street, number, postal, tel)
+    if check is True:
+        if number.find("/") == -1:
+            numer_budynku = number
+            numer_mieszkania = "NULL"
 
+        else:
+            numer = number.split("/")
+            numer_budynku = numer[0]
+            numer_mieszkania = numer[1]
+        main.cursor.execute("INSERT INTO adresy VALUES ('{}', '{}', '{}', {}, {}, '{}', {})"
+                            .format(mail, city, street, numer_budynku, numer_mieszkania, postal, tel))
+        main.connection.commit()
 
-    email.delete(0, END)
-    imie.delete(0, END)
-    nazwisko.delete(0, END)
-    miasto.delete(0, END)
-    ulica.delete(0, END)
-    n_mieszkania.delete(0, END)
-    kod.delete(0, END)
-    telefon.delete(0, END)
+        email.delete(0, END)
+        imie.delete(0, END)
+        nazwisko.delete(0, END)
+        miasto.delete(0, END)
+        ulica.delete(0, END)
+        n_mieszkania.delete(0, END)
+        kod.delete(0, END)
+        telefon.delete(0, END)
+        messagebox.showinfo("", "Założono konto.")
+    else:
+        messagebox.showerror("", "Niepoprawnie wprowadzono {}.".format(check))
+
 
 
 #okienka do rejestracji

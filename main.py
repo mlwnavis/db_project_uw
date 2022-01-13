@@ -1,4 +1,5 @@
 import psycopg2
+
 try:
     connection = psycopg2.connect(
     host = "localhost",
@@ -67,7 +68,7 @@ DROP TABLE zamowienia CASCADE;
           ulica TEXT,
           numer_budynku INT,
           numer_mieszkania INT,
-          kod_pocztowy INT,
+          kod_pocztowy TEXT,
           telefon INT
           );
           
