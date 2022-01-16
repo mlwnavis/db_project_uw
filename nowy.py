@@ -4,7 +4,7 @@ import re
 from tkinter import messagebox
 
 root = Tk()
-root.geometry("400x400")
+
 
 def check_rejestracja(mail, city, street, number, postal, tel):
     email ='^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
@@ -46,8 +46,8 @@ def rejestracja():
             numer = number.split("/")
             numer_budynku = numer[0]
             numer_mieszkania = numer[1]
-        main.cursor.execute("INSERT INTO adresy VALUES ('{}', '{}', '{}', {}, {}, '{}', {})"
-                            .format(mail, city, street, numer_budynku, numer_mieszkania, postal, tel))
+        main.cursor.execute("INSERT INTO adresy VALUES ('{}', '{}', '{}', '{}', '{}', {}, {}, '{}', {})"
+                            .format(mail, imie.get(), nazwisko.get(), city, street, numer_budynku, numer_mieszkania, postal, tel))
         main.connection.commit()
 
         email.delete(0, END)
@@ -82,6 +82,8 @@ kod.grid(row =6, column = 1, padx = 20, pady = 10)
 telefon = Entry(root, width = 30)
 telefon.grid(row =7, column = 1, padx = 20, pady = 10)
 
+
+
 email_label = Label(root, text = "Adres email")
 email_label.grid(row = 0, column = 0)
 email_label = Label(root, text = "Imię")
@@ -102,4 +104,3 @@ email_label.grid(row = 7, column = 0)
 rejestr_button = Button(root, text = "Zarejestruj się", command = rejestracja)
 rejestr_button.grid(row = 8, column = 0, columnspan = 2, pady = 10, padx = 10, ipadx = 100)
 
-root.mainloop()

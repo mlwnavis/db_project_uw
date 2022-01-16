@@ -23,10 +23,15 @@ DROP TABLE adresy CASCADE;
 DROP TABLE koszyki CASCADE;
 DROP TABLE zamowienia CASCADE;
 '''
-
+    drop_triggers = '''
+        DROP TRIGGER nowy_uzytkownik
+        ON adresy CASCADE;
+    '''
 
     cursor.execute(drop_table)
     connection.commit()
+    #cursor.execute(drop_triggers)
+    #connection.commit()
 
     create_table_query = '''
             CREATE TABLE producenci
@@ -34,24 +39,22 @@ DROP TABLE zamowienia CASCADE;
             lokalizacja TEXT);
             
             CREATE TABLE gatunki
-            (id_gatunku SERIAL PRIMARY KEY,
-            nazwa TEXT UNIQUE);
+            (nazwa TEXT PRIMARY KEY);
 
             CREATE TABLE klasy
             (id_klasy SERIAL PRIMARY KEY,
             cena INT);
 
             CREATE TABLE platformy
-            (id_platformy SERIAL PRIMARY KEY,
-            nazwa TEXT);
+            (nazwa TEXT PRIMARY KEY);
 
           CREATE TABLE gry
           (id_gry SERIAL PRIMARY KEY,
           nazwa TEXT,
           id_klasy INT REFERENCES klasy(id_klasy) ON UPDATE CASCADE ON DELETE RESTRICT,
-          id_producenta TEXT REFERENCES producenci(nazwa) ON UPDATE CASCADE ON DELETE RESTRICT,
-          id_gatunku INT REFERENCES gatunki(id_gatunku) ON UPDATE CASCADE ON DELETE RESTRICT,
-          id_platformy INT REFERENCES platformy(id_platformy) ON UPDATE CASCADE ON DELETE RESTRICT,
+          producent TEXT REFERENCES producenci(nazwa) ON UPDATE CASCADE ON DELETE RESTRICT,
+          gatunek TEXT REFERENCES gatunki(nazwa) ON UPDATE CASCADE ON DELETE RESTRICT,
+          platforma TEXT REFERENCES platformy(nazwa) ON UPDATE CASCADE ON DELETE RESTRICT,
           data_wydania DATE,
           ilosc_sztuk INT
           );
@@ -64,6 +67,8 @@ DROP TABLE zamowienia CASCADE;
 
           CREATE TABLE adresy
           (email TEXT PRIMARY KEY,
+          imie TEXT,
+          nazwisko TEXT,
           miasto TEXT,
           ulica TEXT,
           numer_budynku INT,
@@ -74,16 +79,14 @@ DROP TABLE zamowienia CASCADE;
           
           CREATE TABLE klienci
           (email TEXT PRIMARY KEY REFERENCES adresy(email) ON UPDATE CASCADE ON DELETE CASCADE,
-          imie TEXT,
-          nazwisko TEXT,
-          id_koszyka INT,
-          saldo INT
+          id_koszyka SERIAL,
+          saldo INT DEFAULT 0
           );
 
           CREATE TABLE koszyki
-          (id_koszyka SERIAL PRIMARY KEY,
-          id_gry INT REFERENCES gry(id_gry),
-          email TEXT REFERENCES klienci(email) ON UPDATE CASCADE ON DELETE CASCADE);
+          (email TEXT PRIMARY KEY REFERENCES klienci(email) ON UPDATE CASCADE ON DELETE CASCADE,
+          id_gry INT REFERENCES gry(id_gry)
+          );
 
           CREATE TABLE zamowienia
           (id_zamowienia SERIAL PRIMARY KEY,
@@ -93,7 +96,23 @@ DROP TABLE zamowienia CASCADE;
           data_rozpoczecia DATE);
           '''
 
+    triggers = '''
+          CREATE OR REPLACE FUNCTION new_user() RETURNS TRIGGER AS $$
+          BEGIN
+            INSERT INTO klienci(email) VALUES (new.email);
+            RETURN NEW;
+          END;
+          $$ LANGUAGE 'plpgsql';
+          
+          CREATE TRIGGER 
+          nowy_uzytkownik
+          AFTER INSERT ON adresy
+          FOR EACH ROW EXECUTE PROCEDURE new_user();
+          '''
+
     cursor.execute(create_table_query)
+    connection.commit()
+    cursor.execute(triggers)
     connection.commit()
 
 
