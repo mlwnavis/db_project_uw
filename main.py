@@ -12,26 +12,31 @@ try:
     cursor = connection.cursor()
 
     drop_table = '''
-DROP TABLE producenci CASCADE;
-DROP TABLE gatunki CASCADE;
-DROP TABLE klasy CASCADE;
-DROP TABLE platformy CASCADE;
-DROP TABLE gry CASCADE;
-DROP TABLE platnosci CASCADE;
-DROP TABLE klienci CASCADE;
-DROP TABLE adresy CASCADE;
-DROP TABLE koszyki CASCADE;
-DROP TABLE zamowienia CASCADE;
+DROP TABLE IF EXISTS producenci CASCADE;
+DROP TABLE IF EXISTS gatunki CASCADE;
+DROP TABLE IF EXISTS klasy CASCADE;
+DROP TABLE IF EXISTS platformy CASCADE;
+DROP TABLE IF EXISTS gry CASCADE;
+DROP TABLE IF EXISTS platnosci CASCADE;
+DROP TABLE IF EXISTS klienci CASCADE;
+DROP TABLE IF EXISTS adresy CASCADE;
+DROP TABLE IF EXISTS koszyki CASCADE;
+DROP TABLE IF EXISTS zamowienia CASCADE;
 '''
+    drop_views = '''
+    DROP VIEW IF EXISTS wyszukiwarka;
+    '''
     drop_triggers = '''
-        DROP TRIGGER nowy_uzytkownik
+        DROP TRIGGER IF EXISTS nowy_uzytkownik
         ON adresy CASCADE;
     '''
 
     cursor.execute(drop_table)
     connection.commit()
-    #cursor.execute(drop_triggers)
-    #connection.commit()
+    cursor.execute(drop_views)
+    connection.commit()
+    cursor.execute(drop_triggers)
+    connection.commit()
 
     create_table_query = '''
             CREATE TABLE producenci
@@ -65,8 +70,15 @@ DROP TABLE zamowienia CASCADE;
           ilosc_sztuk INT
           );
 
-          CREATE TABLE adresy
+          CREATE TABLE klienci
           (email TEXT PRIMARY KEY,
+          haslo TEXT,
+          id_koszyka SERIAL,
+          saldo INT DEFAULT 0
+          );
+
+          CREATE TABLE adresy
+          (email TEXT PRIMARY KEY REFERENCES klienci(email) ON UPDATE CASCADE ON DELETE CASCADE,
           imie TEXT,
           nazwisko TEXT,
           miasto TEXT,
@@ -75,12 +87,6 @@ DROP TABLE zamowienia CASCADE;
           numer_mieszkania INT,
           kod_pocztowy TEXT,
           telefon INT
-          );
-          
-          CREATE TABLE klienci
-          (email TEXT PRIMARY KEY REFERENCES adresy(email) ON UPDATE CASCADE ON DELETE CASCADE,
-          id_koszyka SERIAL,
-          saldo INT DEFAULT 0
           );
 
           CREATE TABLE koszyki
@@ -95,6 +101,12 @@ DROP TABLE zamowienia CASCADE;
           id_gry INT REFERENCES gry(id_gry),
           data_rozpoczecia DATE);
           '''
+
+    views = '''
+    CREATE VIEW wyszukiwarka AS
+    SELECT nazwa, producent, gatunek, platforma, data_wydania, ilosc_sztuk, cena FROM
+    gry INNER JOIN klasy ON gry.id_klasy = klasy.id_klasy;
+    '''
 
     triggers = '''
           CREATE OR REPLACE FUNCTION new_user() RETURNS TRIGGER AS $$
@@ -111,6 +123,8 @@ DROP TABLE zamowienia CASCADE;
           '''
 
     cursor.execute(create_table_query)
+    connection.commit()
+    cursor.execute(views)
     connection.commit()
     cursor.execute(triggers)
     connection.commit()

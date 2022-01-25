@@ -10,26 +10,31 @@ try:
             records = 'Brak wyników.'
         else:
             for row in wyniki:
+                #print(row)
                 records += str(row) + "\n"
 
         search_label.destroy()
         search_label = Label(root, text = records)
-        search_label.grid(row = 2, column = 3, columnspan = 2)
+        search_label.grid(row = 2, column = 3, columnspan = 2, rowspan = 5)
 
     def wyszukaj():
         platforma = variable.get()
         nazwa = search.get()
-        if platforma == "Dowolna":
-            fetch_que = '''
-            SELECT nazwa, producent, gatunek, platforma, ilosc_sztuk, id_klasy FROM gry
-            WHERE nazwa LIKE '%{}%';
-            '''.format(nazwa)
-
-        else:
-            fetch_que = '''
-                        SELECT nazwa, producent, gatunek, platforma, data_wydania, ilosc_sztuk, id_klasy FROM gry
-                        WHERE nazwa LIKE '%{}%' AND platforma == '{}';
-                        '''.format(nazwa, platforma)
+        dostepnosc = av.get()
+        fetch_que = '''
+                    SELECT * FROM wyszukiwarka
+                    WHERE nazwa LIKE '%{}%'
+                    '''.format(nazwa)
+        if platforma != "Dowolna":
+            fetch_que +=  '''
+            AND platforma = '{}'
+            '''.format(platforma)
+        elif dostepnosc:
+            print("a")
+            fetch_que += '''
+            AND ilosc_sztuk > 0
+            '''
+        fetch_que += ';'
 
         main.cursor.execute(fetch_que)
 
@@ -37,14 +42,9 @@ try:
         wydrukuj_wyniki(results)
 
 
-    search = Entry(root, width=30)
-    search.grid(row=0, column=3, padx=20)
-    enter = Button(root, text = "Szukaj", command = wyszukaj)
-    enter.grid(row = 1, column = 3, columnspan = 2 , pady = 10, padx = 10, ipadx = 80)
-
     platformy_query = '''
-    SELECT * FROM platformy;
-    '''
+        SELECT * FROM platformy;
+        '''
 
     main.cursor.execute(platformy_query)
 
@@ -55,6 +55,18 @@ try:
     platformy.insert(0, "Dowolna")
     variable = StringVar(root)
     variable.set(platformy[0])
+
+
+    search = Entry(root, width=30)
+    search.grid(row=0, column=3, padx=20)
+
+    enter = Button(root, text = "Szukaj", command = wyszukaj)
+    enter.grid(row = 1, column = 3 , pady = 10, padx = 10, ipadx = 80)
+
+    av = BooleanVar()
+    check_av = Checkbutton(root, text='Wyszukaj pozycje, \n które są ma w magazynie',
+                     variable=av, onvalue=True, offvalue=False)
+    check_av.grid(row = 1, column =4)
 
     gatunki = OptionMenu(root, variable, *platformy)
     gatunki.grid(row=0, column=4)
