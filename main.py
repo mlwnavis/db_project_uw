@@ -3,9 +3,9 @@ import psycopg2
 try:
     connection = psycopg2.connect(
     host = "localhost",
-    database = "postgres",
-    user = "postgres",
-    password = "haslo123",
+    database = "db_project_uw",
+    user = "filip",
+    password = "3@zyD@nych",
     port = "5432"
     )
 
@@ -17,11 +17,10 @@ DROP TABLE IF EXISTS gatunki CASCADE;
 DROP TABLE IF EXISTS klasy CASCADE;
 DROP TABLE IF EXISTS platformy CASCADE;
 DROP TABLE IF EXISTS gry CASCADE;
-DROP TABLE IF EXISTS platnosci CASCADE;
 DROP TABLE IF EXISTS klienci CASCADE;
-DROP TABLE IF EXISTS adresy CASCADE;
-DROP TABLE IF EXISTS koszyki CASCADE;
-DROP TABLE IF EXISTS zamowienia CASCADE;
+DROP TABLE IF EXISTS poczekalnia CASCADE;
+DROP TABLE IF EXISTS wypozyczone CASCADE;
+DROP TABLE IF EXISTS historia CASCADE;
 '''
     drop_views = '''
     DROP VIEW IF EXISTS wyszukiwarka;
@@ -64,12 +63,6 @@ DROP TABLE IF EXISTS zamowienia CASCADE;
           ilosc_sztuk INT
           );
 
-
-          CREATE TABLE platnosci
-          (id_platnosci SERIAL PRIMARY KEY,
-          ilosc_sztuk INT
-          );
-
           CREATE TABLE klienci
           (email TEXT PRIMARY KEY,
           haslo TEXT,
@@ -88,18 +81,29 @@ DROP TABLE IF EXISTS zamowienia CASCADE;
           kod_pocztowy TEXT,
           telefon INT
           );
-
-          CREATE TABLE koszyki
-          (email TEXT PRIMARY KEY REFERENCES klienci(email) ON UPDATE CASCADE ON DELETE CASCADE,
-          id_gry INT REFERENCES gry(id_gry)
-          );
-
-          CREATE TABLE zamowienia
-          (id_zamowienia SERIAL PRIMARY KEY,
-          email TEXT REFERENCES klienci(email) ON UPDATE CASCADE ON DELETE CASCADE,
-          id_platnosci INT REFERENCES platnosci(id_platnosci) ON UPDATE CASCADE ON DELETE CASCADE,
+          
+          CREATE TABLE poczekalnia
+          (id_zamowienia SERIAL,
           id_gry INT REFERENCES gry(id_gry),
-          data_rozpoczecia DATE);
+          email TEXT REFERENCES klienci(email) ON UPDATE CASCADE ON DELETE RESTRICT,
+          data_zlozenia DATE,
+          kod_platnosci INT);
+          
+          CREATE TABLE wypozyczone
+          (id_zamowienia INT,
+          id_gry INT REFERENCES gry(id_gry),
+          email TEXT REFERENCES klienci(email) ON UPDATE CASCADE ON DELETE RESTRICT,
+          data_zlozenia DATE,
+          data_platnosci DATE,
+          kod_zwrotu INT);
+          
+          CREATE TABLE historia
+          (id_zamowienia INT,
+          id_gry INT,
+          email TEXT,
+          data_zlozenia DATE,
+          data_platnosci DATE,
+          data_zwrotu DATE);
           '''
 
     views = '''
@@ -111,14 +115,14 @@ DROP TABLE IF EXISTS zamowienia CASCADE;
     triggers = '''
           CREATE OR REPLACE FUNCTION new_user() RETURNS TRIGGER AS $$
           BEGIN
-            INSERT INTO klienci(email) VALUES (new.email);
+            INSERT INTO adresy(email) VALUES (new.email);
             RETURN NEW;
           END;
           $$ LANGUAGE 'plpgsql';
           
           CREATE TRIGGER 
           nowy_uzytkownik
-          AFTER INSERT ON adresy
+          AFTER INSERT ON klienci
           FOR EACH ROW EXECUTE PROCEDURE new_user();
           '''
 
