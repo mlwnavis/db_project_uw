@@ -2,9 +2,10 @@ import main
 from tkinter import *
 import re
 from tkinter import messagebox
-
+from tkinter import ttk
 root = Tk()
-
+style = ttk.Style()
+style.configure("Courier.TButton", font=("Courier", 10))
 
 def check_rejestracja(mail, password, city, street, number, postal, tel):
     email ='^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'

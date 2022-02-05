@@ -1,21 +1,40 @@
 from nowy import *
 import test2
+from copy import deepcopy
 try:
+    labels = ['Tytuł', 'Producent', 'Gatunek', 'Platforma', 'Data wydania', 'Ilość sztuk', 'Cena']
+    def string_limits(records):
+        rec = deepcopy(records)
+        rec.append(labels)
+        records = ([list(i) for i in zip(*rec)])
+        result = {}
+        for record in records:
+            result[records.index(record)] = len(max(map(str, record), key=len)) + 2
+        return result
+
+    def print_row(row):
+        result = ""
+        for record in row:
+            result += str(record) + " " * (limits[row.index(record)] - len(str(record)))
+        result += "\n"
+        return result
+
 
     search_label = Label()
     def wydrukuj_wyniki(wyniki):
-        records = ''
+        records = print_row(labels) + "\n"
         global search_label
+
         if not wyniki:
             records = 'Brak wyników.'
         else:
             for row in wyniki:
                 #print(row)
-                records += str(row) + "\n"
-
+                records += print_row(row)
+        print(records)
         search_label.destroy()
-        search_label = Label(root, text = records)
-        search_label.grid(row = 2, column = 3, columnspan = 2, rowspan = 5)
+        search_label = ttk.Label(root, text = records.strip(), justify=LEFT, style="Courier.TButton")
+        search_label.grid(row = 2, column = 3, columnspan = 10, rowspan = 10)
 
     def wyszukaj():
         platforma = variable.get()
@@ -37,8 +56,9 @@ try:
         fetch_que += ';'
 
         main.cursor.execute(fetch_que)
-
         results = main.cursor.fetchall()
+        global limits
+        limits = string_limits(results)
         wydrukuj_wyniki(results)
 
 

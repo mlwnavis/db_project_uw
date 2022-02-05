@@ -2,11 +2,11 @@ import psycopg2
 
 try:
     connection = psycopg2.connect(
-    host = "localhost",
-    database = "db_project_uw",
-    user = "filip",
-    password = "3@zyD@nych",
-    port = "5432"
+        host="localhost",
+        database="postgres",
+        user="postgres",
+        password="haslo123",
+        port="5432"
     )
 
     cursor = connection.cursor()
@@ -21,6 +21,7 @@ DROP TABLE IF EXISTS klienci CASCADE;
 DROP TABLE IF EXISTS poczekalnia CASCADE;
 DROP TABLE IF EXISTS wypozyczone CASCADE;
 DROP TABLE IF EXISTS historia CASCADE;
+DROP TABLE IF EXISTS adresy CASCADE;
 '''
     drop_views = '''
     DROP VIEW IF EXISTS wyszukiwarka;
