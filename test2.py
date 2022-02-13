@@ -138,6 +138,9 @@ try:
     UPDATE adresy SET imie = 'Laura', nazwisko = 'Wozniak', miasto = 'Wroclaw', ulica = 'Sloneczna', numer_budynku = 42, numer_mieszkania = 10, kod_pocztowy = '36-889', telefon = 213405897 WHERE email = 'laurawozniak17@gmail.com';
     UPDATE adresy SET imie = 'Hanna', nazwisko = 'Nowak', miasto = 'Szczecin', ulica = 'Lesna', numer_budynku = 29, numer_mieszkania = 9, kod_pocztowy = '56-289', telefon = 239478650 WHERE email = 'hannanowak18@onet.com';
     UPDATE adresy SET imie = 'Leon', nazwisko = 'Wojcik', miasto = 'Bydgoszcz', ulica = 'Sloneczna', numer_budynku = 51, numer_mieszkania = 13, kod_pocztowy = '22-505', telefon = 546387190 WHERE email = 'leonwojcik19@gmail.com';
+
+    INSERT INTO wypozyczone(id_zamowienia, id_gry, email, data_zlozenia, data_platnosci, kod_zwrotu) VALUES
+    (1,2,'szymonpawlak0@yahoo.com', '19-11-1998', '19-11-1998', 13);
 '''
 
     main.cursor.execute(goticzek)

@@ -111,6 +111,10 @@ DROP TABLE IF EXISTS adresy CASCADE;
     CREATE VIEW wyszukiwarka AS
     SELECT nazwa, producent, gatunek, platforma, data_wydania, ilosc_sztuk, cena FROM
     gry INNER JOIN klasy ON gry.id_klasy = klasy.id_klasy;
+    
+    CREATE VIEW overdue AS
+    SELECT id_zamowienia, email FROM wypozyczone WHERE date(now() - INTERVAL '2 week') > data_zlozenia;
+    
     '''
 
     triggers = '''

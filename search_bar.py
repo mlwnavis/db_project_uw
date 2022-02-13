@@ -91,7 +91,7 @@ try:
     gatunki = OptionMenu(root, variable, *platformy)
     gatunki.grid(row=0, column=4)
 
-    root.mainloop()
+
 
 except (Exception, main.psycopg2.Error) as error:
     print("Error while connecting to PostgreSQL", error)
