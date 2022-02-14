@@ -3,9 +3,9 @@ import psycopg2
 try:
     connection = psycopg2.connect(
         host="localhost",
-        database="postgres",
-        user="postgres",
-        password="haslo123",
+        database="db_project_uw",
+        user="filip",
+        password="3@zyD@nych",
         port="5432"
     )
 
@@ -87,16 +87,17 @@ DROP TABLE IF EXISTS adresy CASCADE;
           (id_zamowienia SERIAL,
           id_gry INT REFERENCES gry(id_gry),
           email TEXT REFERENCES klienci(email) ON UPDATE CASCADE ON DELETE RESTRICT,
-          data_zlozenia DATE,
-          kod_platnosci INT);
+          data_zlozenia DATE DEFAULT CURRENT_DATE,
+          kod_platnosci TEXT);
           
           CREATE TABLE wypozyczone
           (id_zamowienia INT,
           id_gry INT REFERENCES gry(id_gry),
           email TEXT REFERENCES klienci(email) ON UPDATE CASCADE ON DELETE RESTRICT,
           data_zlozenia DATE,
-          data_platnosci DATE,
-          kod_zwrotu INT);
+          kod_platnosci TEXT,
+          data_platnosci DATE DEFAULT CURRENT_DATE,
+          kod_zwrotu TEXT);
           
           CREATE TABLE historia
           (id_zamowienia INT,
@@ -104,7 +105,7 @@ DROP TABLE IF EXISTS adresy CASCADE;
           email TEXT,
           data_zlozenia DATE,
           data_platnosci DATE,
-          data_zwrotu DATE);
+          data_zwrotu DATE DEFAULT CURRENT_DATE);
           '''
 
     views = '''

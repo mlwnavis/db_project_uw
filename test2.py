@@ -140,7 +140,7 @@ try:
     UPDATE adresy SET imie = 'Leon', nazwisko = 'Wojcik', miasto = 'Bydgoszcz', ulica = 'Sloneczna', numer_budynku = 51, numer_mieszkania = 13, kod_pocztowy = '22-505', telefon = 546387190 WHERE email = 'leonwojcik19@gmail.com';
 
     INSERT INTO wypozyczone(id_zamowienia, id_gry, email, data_zlozenia, data_platnosci, kod_zwrotu) VALUES
-    (1,2,'szymonpawlak0@yahoo.com', '19-11-1998', '19-11-1998', 13);
+    (0,2,'szymonpawlak0@yahoo.com', '19-11-1998', '19-11-1998', 13);
 '''
 
     main.cursor.execute(goticzek)
