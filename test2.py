@@ -96,27 +96,27 @@ try:
     INSERT INTO gry (nazwa, id_klasy, producent, gatunek, platforma, data_wydania, ilosc_sztuk)
     VALUES ('Need for Speed II', 1, 'EA Canada', 'Wyścigowa', 'PlayStation', '17-11-1997', 12);
     
-    INSERT INTO klienci(email, haslo, id_koszyka, saldo) VALUES
-    ('szymonpawlak0@yahoo.com', 'ahsCxSI9r', 0, 0),
-    ('polabaran1@yahoo.com', '12loCEyaO', 1, 0),
-    ('janwrobel2@gmail.com', 'QdUaJwPe7', 2, 0),
-    ('alicjamazur3@gmail.com', '70Rp2lwIy', 3, 0),
-    ('lauraszewczyk4@o2.com', 'qh8nSa75O', 4, 0),
-    ('antonizajac5@gmail.com', 'rBGj4h2wO', 5, 0),
-    ('polawrobel6@interia.com', 'qrU7pFkxX', 6, 0),
-    ('poladudek7@wp.com', 'rbI3xWfgD', 7, 0),
-    ('zuzannamarciniak8@onet.com', 'XK1veLrFB', 8, 0),
-    ('lenabaran9@yahoo.com', 'lD4vZmaE9', 9, 0),
-    ('franciszekwalczak10@yahoo.com', 'FrJMSgcdz', 10, 0),
-    ('filipkrol11@o2.com', 'CMPrp7Ze8', 11, 0),
-    ('zofiapawlak12@gmail.com', 'mALSH6v1X', 12, 0),
-    ('mikolajpawlak13@interia.com', 'jIAfGWVkb', 13, 0),
-    ('polapietrzak14@gmail.com', 'Um0dgp7ZH', 14, 0),
-    ('leondudek15@yahoo.com', 'KdThsprI6', 15, 0),
-    ('hannakaczmarek16@interia.com', 'junDVWkS3', 16, 0),
-    ('laurawozniak17@gmail.com', 'p3FYshk5v', 17, 0),
-    ('hannanowak18@onet.com', 'cAb7KC4Zw', 18, 0),
-    ('leonwojcik19@gmail.com', 'AYLjDuVE5', 19, 0);
+    INSERT INTO klienci(email, haslo) VALUES
+    ('szymonpawlak0@yahoo.com', 'ahsCxSI9r'),
+    ('polabaran1@yahoo.com', '12loCEyaO'),
+    ('janwrobel2@gmail.com', 'QdUaJwPe7'),
+    ('alicjamazur3@gmail.com', '70Rp2lwIy'),
+    ('lauraszewczyk4@o2.com', 'qh8nSa75O'),
+    ('antonizajac5@gmail.com', 'rBGj4h2wO'),
+    ('polawrobel6@interia.com', 'qrU7pFkxX'),
+    ('poladudek7@wp.com', 'rbI3xWfgD'),
+    ('zuzannamarciniak8@onet.com', 'XK1veLrFB'),
+    ('lenabaran9@yahoo.com', 'lD4vZmaE9'),
+    ('franciszekwalczak10@yahoo.com', 'FrJMSgcdz'),
+    ('filipkrol11@o2.com', 'CMPrp7Ze8'),
+    ('zofiapawlak12@gmail.com', 'mALSH6v1X'),
+    ('mikolajpawlak13@interia.com', 'jIAfGWVkb'),
+    ('polapietrzak14@gmail.com', 'Um0dgp7ZH'),
+    ('leondudek15@yahoo.com', 'KdThsprI6'),
+    ('hannakaczmarek16@interia.com', 'junDVWkS3'),
+    ('laurawozniak17@gmail.com', 'p3FYshk5v'),
+    ('hannanowak18@onet.com', 'cAb7KC4Zw'),
+    ('leonwojcik19@gmail.com', 'AYLjDuVE5');
     
     UPDATE adresy SET imie = 'Szymon', nazwisko = 'Pawlak', miasto = 'Szczecin', ulica = 'Lipowa', numer_budynku = 46, numer_mieszkania = 27, kod_pocztowy = '95-763', telefon = 921648075 WHERE email = 'szymonpawlak0@yahoo.com';
     UPDATE adresy SET imie = 'Pola', nazwisko = 'Baran', miasto = 'Lodz', ulica = 'Ogrodowa', numer_budynku = 23, numer_mieszkania = 14, kod_pocztowy = '74-580', telefon = 029617438 WHERE email = 'polabaran1@yahoo.com';

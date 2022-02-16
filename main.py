@@ -3,9 +3,9 @@ import psycopg2
 try:
     connection = psycopg2.connect(
         host="localhost",
-        database="db_project_uw",
-        user="filip",
-        password="3@zyD@nych",
+        database="postgres",
+        user="postgres",
+        password="haslo123",
         port="5432"
     )
 
@@ -15,6 +15,7 @@ try:
 DROP TABLE IF EXISTS producenci CASCADE;
 DROP TABLE IF EXISTS gatunki CASCADE;
 DROP TABLE IF EXISTS klasy CASCADE;
+DROP TABLE IF EXISTS koszyki CASCADE;
 DROP TABLE IF EXISTS platformy CASCADE;
 DROP TABLE IF EXISTS gry CASCADE;
 DROP TABLE IF EXISTS klienci CASCADE;
@@ -67,8 +68,7 @@ DROP TABLE IF EXISTS adresy CASCADE;
           CREATE TABLE klienci
           (email TEXT PRIMARY KEY,
           haslo TEXT,
-          id_koszyka SERIAL,
-          saldo INT DEFAULT 0
+          id_koszyka SERIAL
           );
 
           CREATE TABLE adresy

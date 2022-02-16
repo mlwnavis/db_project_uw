@@ -29,9 +29,7 @@ try:
             records = 'Brak wyników.'
         else:
             for row in wyniki:
-                #print(row)
                 records += print_row(row)
-        print(records)
         search_label.destroy()
         search_label = ttk.Label(root, text = records.strip(), justify=LEFT, style="Courier.TButton")
         search_label.grid(row = 2, column = 3, columnspan = 10, rowspan = 10)
@@ -49,7 +47,6 @@ try:
             AND platforma = '{}'
             '''.format(platforma)
         elif dostepnosc:
-            print("a")
             fetch_que += '''
             AND ilosc_sztuk > 0
             '''
