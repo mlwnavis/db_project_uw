@@ -21,11 +21,14 @@ DROP TABLE IF EXISTS gry CASCADE;
 DROP TABLE IF EXISTS klienci CASCADE;
 DROP TABLE IF EXISTS poczekalnia CASCADE;
 DROP TABLE IF EXISTS wypozyczone CASCADE;
+DROP TABLE IF EXISTS zamowienia CASCADE;
+DROP TABLE IF EXISTS platnosci CASCADE;
 DROP TABLE IF EXISTS historia CASCADE;
 DROP TABLE IF EXISTS adresy CASCADE;
 '''
     drop_views = '''
     DROP VIEW IF EXISTS wyszukiwarka;
+    DROP VIEW IF EXISTS overdue;
     '''
     drop_triggers = '''
         DROP TRIGGER IF EXISTS nowy_uzytkownik
@@ -100,9 +103,9 @@ DROP TABLE IF EXISTS adresy CASCADE;
           kod_zwrotu TEXT);
           
           CREATE TABLE historia
-          (id_zamowienia INT,
+          (id_zamowienia INT REFERENCES gry(id_gry) ON UPDATE CASCADE ON DELETE RESTRICT,
           id_gry INT,
-          email TEXT,
+          email TEXT REFERENCES klienci(email) ON UPDATE CASCADE ON DELETE RESTRICT,
           data_zlozenia DATE,
           data_platnosci DATE,
           data_zwrotu DATE DEFAULT CURRENT_DATE);

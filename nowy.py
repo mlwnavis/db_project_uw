@@ -7,9 +7,11 @@ root = Tk()
 style = ttk.Style()
 style.configure("Courier.TButton", font=("Courier", 10))
 
-def check_rejestracja(mail, password, city, street, number, postal, tel):
+def check_rejestracja(mail, name, lname, password, city, street, number, postal, tel):
     email ='^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
-    haslo = ''
+    haslo = '^([A-ZŚŹŻŁa-ząćęłńóśźż0-9]{5,})$'
+    imie = '^([A-ZŚŹŻŁ]{1}[a-ząćęłńóśźż]{1,})$'
+    nazwisko = '^([A-ZŚŹŻŁ]{1}[a-ząćęłńóśźż]{1,})$'
     miasto = '^([A-ZŚŹŻŁ]{1}[a-ząćęłńóśźż]{1,})$'
     ulica = '^([A-ZŚŹŻŁ]{1}[a-ząćęłńóśźż]{2,})$'
     adres = '^([1-9]{1,2})+[/]?([1-9]{1,2})$'
@@ -20,6 +22,10 @@ def check_rejestracja(mail, password, city, street, number, postal, tel):
         return "adres email"
     elif not re.search(haslo, password):
         return "haslo"
+    elif not re.search(imie, name):
+        return "imię"
+    elif not re.search(nazwisko, lname):
+        return "nazwisko"
     elif not re.search(miasto, city):
         return "miasto"
     elif not re.search(ulica, street):
@@ -42,7 +48,9 @@ def rejestracja():
     number = n_mieszkania.get()
     postal = str(kod.get())
     tel = telefon.get()
-    check = check_rejestracja(mail, password, city, street, number, postal, tel)
+    name = imie.get()
+    lname = nazwisko.get()
+    check = check_rejestracja(mail, name, lname, password, city, street, number, postal, tel)
     if check is True:
         if number.find("/") == -1:
             numer_budynku = number
@@ -57,7 +65,7 @@ def rejestracja():
         main.cursor.execute("UPDATE adresy SET imie='{}', nazwisko='{}', miasto='{}', "
                             "ulica='{}', numer_budynku={}, numer_mieszkania={}, kod_pocztowy='{}', telefon={}"
                             "WHERE email='{}'"
-                            .format(imie.get(), nazwisko.get(), city, street, numer_budynku, numer_mieszkania, postal, tel, mail))
+                            .format(name, lname, city, street, numer_budynku, numer_mieszkania, postal, tel, mail))
         main.connection.commit()
 
         email.delete(0, END)
